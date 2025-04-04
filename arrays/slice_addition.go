@@ -1,0 +1,88 @@
+package arrays
+
+import (
+	"fmt"
+	"math"
+	"slices"
+)
+
+/*
+Given two slices of positive integers, sum the slices into one slice of integers.
+For example {2,9} + {9,9,9} return {1,0,2,8}
+*/
+
+func sumSlices(a, b []int) []int {
+	
+	// get the maximum length from both slices
+	var length_of_a int = len(a)
+	var length_of_b int = len(b)
+
+	if length_of_a==0 {
+		return b
+	} else if length_of_b == 0 {
+		return a
+	}
+
+	var iteration_length int
+	var lowest_length int
+	var highest_slice []int
+	if length_of_a>=length_of_b {
+		iteration_length = length_of_a
+		lowest_length=length_of_b
+		highest_slice = a
+	} else if length_of_b > length_of_a {
+		iteration_length = length_of_b
+		lowest_length=length_of_a
+		highest_slice = b
+	}
+
+	var result []int = []int{}
+
+	for i := iteration_length-1; i>=0; i-- {
+		var sum int
+		if i<lowest_length{
+			sum = a[i] + b[i]
+		} else {
+			sum = highest_slice[i]
+		}
+		var digit int
+		var remainder int
+		digit = sum
+		if sum > 9 {
+			digit = sum % 10
+			div := sum / 10
+			remainder = int(math.Floor(float64(div)))
+			result = append(result, digit, remainder)
+		} else {
+			result = append(result, digit)
+		}
+		fmt.Println(result)
+	}
+	
+
+	for i:=0; i<=iteration_length-1; i++ {
+		result[i], result[iteration_length-1-i] = result[iteration_length-1-i], result[i]
+	}
+
+	return result
+}
+
+func TestAddSliceOfTwoNumbers() {
+	tests := []struct {
+		num1, num2, sum []int
+	}{
+		{[]int{1}, []int{}, []int{1}},
+		{[]int{1}, []int{0}, []int{1}},
+		{[]int{1}, []int{1}, []int{2}},
+		{[]int{1}, []int{9}, []int{1, 0}},
+		{[]int{2, 5}, []int{3, 5}, []int{6, 0}},
+		{[]int{2, 9}, []int{9, 9, 9}, []int{1, 0, 2, 8}},
+		{[]int{9, 9, 9}, []int{9, 9, 9}, []int{1, 9, 9, 8}},
+	}
+	for i, test := range tests {
+		
+		if got := sumSlices(test.num1, test.num2); !slices.Equal(got, test.sum) {
+			fmt.Println("Failed test case #%d. Want %v got %v", i, test.sum, got)
+		}
+	}
+}
