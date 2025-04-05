@@ -24,39 +24,46 @@ func sumSlices(a, b []int) []int {
 	}
 
 	var iteration_length int
-	var lowest_length int
-	var highest_slice []int
+	
 	if length_of_a>=length_of_b {
 		iteration_length = length_of_a
-		lowest_length=length_of_b
-		highest_slice = a
+		number_of_zeros := iteration_length-length_of_b
+		zeros := make(int[], number_of_zeros)
+		b = append(zeros, b)
 	} else if length_of_b > length_of_a {
 		iteration_length = length_of_b
-		lowest_length=length_of_a
-		highest_slice = b
+		number_of_zeros := iteration_length-length_of_a
+		zeros := make(int[], number_of_zeros)
+		a = append(zeros, a)
 	}
 
 	var result []int = []int{}
-
+	var current int = 0
 	for i := iteration_length-1; i>=0; i-- {
 		var sum int
-		if i<lowest_length{
+		if current<len(result) {
 			sum = a[i] + b[i]
-		} else {
-			sum = highest_slice[i]
 		}
-		var digit int
-		var remainder int
-		digit = sum
-		if sum > 9 {
-			digit = sum % 10
-			div := sum / 10
-			remainder = int(math.Floor(float64(div)))
-			result = append(result, digit, remainder)
+		sum = a[i] + b[i] + sum[current]
+
+		if sum>9 {
+			var remainder int = sum % 10
+			var digit int = sum/10
+			if current<len(result) {
+				result[current]=digit
+			}else{
+				result = append(result,digit)
+			}
+			result = append(result,remainder)
+			
 		} else {
-			result = append(result, digit)
+                        if current<len(result) {
+				result[current]=digit
+			}else{
+				result = append(result,digit)
+			}
 		}
-		fmt.Println(result)
+		current++
 	}
 	
 
