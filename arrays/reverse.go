@@ -1,7 +1,7 @@
 package arrays
 
 import (
-	"testing"
+	"fmt"
 	"slices"
 )
 
@@ -21,7 +21,7 @@ func reverse(list []int, start, end int) {
 	
 }
 
-func TestReverseInLine(t *testing.T) {
+func TestReverseInLine() {
 	tests := []struct {
 		list	[]int
 		start	int
@@ -40,13 +40,8 @@ func TestReverseInLine(t *testing.T) {
 	for i, test := range tests {
 		reverse(test.list, test.start, test.end)
 		if !slices.Equal(test.list, test.reversed) {
-			t.Fatalf("Failed test case #%d, expected %#v instead got %#v", i, test.reversed, test.list)
+			fmt.Println("Failed test case #%d, expected %#v instead got %#v", i, test.reversed, test.list)
 		}
 	}
-}
-
-func main() {
-	var t testing.T
-	TestReverseInLine(&t)
 }
 

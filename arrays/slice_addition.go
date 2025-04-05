@@ -2,7 +2,6 @@ package arrays
 
 import (
 	"fmt"
-	"math"
 	"slices"
 )
 
@@ -25,50 +24,58 @@ func sumSlices(a, b []int) []int {
 
 	var iteration_length int
 	
-	if length_of_a>=length_of_b {
+	// check which slice is bigger and normalize with starting 0s
+	if length_of_a>length_of_b {
 		iteration_length = length_of_a
 		number_of_zeros := iteration_length-length_of_b
-		zeros := make(int[], number_of_zeros)
-		b = append(zeros, b)
+		zeros := make([]int, number_of_zeros)
+		b = append(zeros, b...)
 	} else if length_of_b > length_of_a {
 		iteration_length = length_of_b
 		number_of_zeros := iteration_length-length_of_a
-		zeros := make(int[], number_of_zeros)
-		a = append(zeros, a)
+		zeros := make([]int, number_of_zeros)
+		a = append(zeros, a...)
+	} else{
+		iteration_length = length_of_a
 	}
 
-	var result []int = []int{}
+	var result []int
 	var current int = 0
 	for i := iteration_length-1; i>=0; i-- {
 		var sum int
+
+		// check if a carry is present from the previous iteration
 		if current<len(result) {
+			sum = a[i] + b[i] + result[current]
+		} else{
 			sum = a[i] + b[i]
 		}
-		sum = a[i] + b[i] + sum[current]
-
+		
+		// check if sum is larger than 9, if so it needs to be split
 		if sum>9 {
 			var remainder int = sum % 10
-			var digit int = sum/10
+			var digit = sum/10
 			if current<len(result) {
-				result[current]=digit
+				result[current]=remainder
 			}else{
-				result = append(result,digit)
+				result = append(result,remainder)
 			}
-			result = append(result,remainder)
+			result = append(result,digit)
 			
 		} else {
-                        if current<len(result) {
-				result[current]=digit
+            if current<len(result) {
+				result[current]=sum
 			}else{
-				result = append(result,digit)
+				result = append(result,sum)
 			}
 		}
+
 		current++
 	}
 	
-
-	for i:=0; i<=iteration_length-1; i++ {
-		result[i], result[iteration_length-1-i] = result[iteration_length-1-i], result[i]
+	// reverse list
+	for i:=0; i<len(result)/2; i++ {
+		result[i], result[len(result)-1-i] = result[len(result)-1-i], result[i]
 	}
 
 	return result
