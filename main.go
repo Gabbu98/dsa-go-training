@@ -7,4 +7,5 @@ import (
 func main() {
     arrays.TestReverseInLine()
 	arrays.TestAddSliceOfTwoNumbers()
+	arrays.TestFindDuplicate()
 }
