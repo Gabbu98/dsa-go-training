@@ -34,6 +34,7 @@ func extractZeroSumTriplets(list []int) [][]int {
   // The two pointer system
   for !isZero {
     if kPointer==jPointer || fixedPointer==jPointer {
+      isZero = true
       break
     }
 
