@@ -8,5 +8,6 @@ func main() {
     arrays.TestReverseInLine()
 	arrays.TestAddSliceOfTwoNumbers()
 	arrays.TestFindDuplicate()
-	arrays.ZeroSumTriplets()
+	// arrays.ZeroSumTriplets()
+	arrays.Product([]int{1,2,3,4})
 }
