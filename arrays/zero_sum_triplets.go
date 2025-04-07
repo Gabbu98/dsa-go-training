@@ -1,6 +1,9 @@
 package arrays
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 /*
 Input: Array of numbers
@@ -9,27 +12,47 @@ Example:
 {1,2,-4,6,3} -> {-4,1,3} because -4+1+3 = 0
 */
 
-func ExtractZeroSumTriplets(list []int) []int {
-  result := make([]int, 3)
+func extractZeroSumTriplets(list []int) [][]int {
+  result := [][]int{}
   // if length is 0 return a list with three zeros
-  if len(list) == 0 {
+  if len(list) < 3  {
     return result
   }
 
-  list = sort(list)
+  sortedList := sort(list)
+
+  isZero := false
+  fixedPointer := 0
+  jPointer := 1
+  kPointer := len(sortedList)-1
   
+  var triplets [][]int
+  if len(sortedList) == 0 {
+    return append(triplets, list[0:3])
+  }
+
   // The two pointer system
+  for !isZero {
+    if kPointer==jPointer || fixedPointer==jPointer {
+      break
+    }
 
+    sum := sortedList[fixedPointer]+sortedList[jPointer]+sortedList[kPointer]
+    
+    if sum == 0 {
+      triplets = append(triplets, []int{sortedList[fixedPointer], sortedList[jPointer], sortedList[kPointer]})
+    }
 
-  // 0+1+2=3-4=-1
-  // -4+1+2+3=3
-  // -4+3+1 = 0
+    if sum > 0 {
+      kPointer--
+    }
 
-  // {7,3,5,-9,6,-4,4}
-  // 7,3,5,-9
-  // {-20,-4,3,4,5,6,7,1}
-  // 7,
-  return []int{}
+    if sum < 0 {
+      jPointer++
+    }
+  }
+
+  return triplets
 } 
 
 func sort(unsorted[]int) []int {
@@ -61,4 +84,27 @@ func sort(unsorted[]int) []int {
     sorted = tempList
   }
   return sorted
+}
+
+func ZeroSumTriplets() {
+  tests := []struct {
+		list     []int
+		triplets [][]int
+	}{
+		{[]int{}, [][]int{}},
+		{[]int{1}, [][]int{}},
+		{[]int{1, 2}, [][]int{}},
+		{[]int{1, 2, 3}, [][]int{}},
+		{[]int{1, -4, 3}, [][]int{{-4, 1, 3}}},
+		{[]int{0, 0, 0, 0}, [][]int{{0, 0, 0}}},
+		{[]int{1, 2, -4, 6, 3}, [][]int{{-4, 1, 3}}},
+		{[]int{-1, -2, -8, 6, 2, 3}, [][]int{{-8, 2, 6}, {-2, -1, 3}}},
+		{[]int{1, -2, -4, 5, -2, 4, 1, 3}, [][]int{{-4, 1, 3}, {-2, -2, 4}, {-2, 1, 1}}},
+	}
+	
+	for i, test := range tests {
+		if got := extractZeroSumTriplets(test.list); !reflect.DeepEqual(got, test.triplets) {
+			fmt.Println("Failed test case #%d. Want %#v got %#v", i, test.triplets, got)
+		}
+	}
 }
