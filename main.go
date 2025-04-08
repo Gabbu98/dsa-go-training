@@ -9,5 +9,5 @@ func main() {
 	arrays.TestAddSliceOfTwoNumbers()
 	arrays.TestFindDuplicate()
 	// arrays.ZeroSumTriplets()
-	arrays.Product([]int{1,2,3,4})
+	arrays.ProductOptimized([]int{1,2,3,4})
 }
