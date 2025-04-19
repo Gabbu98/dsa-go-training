@@ -11,5 +11,6 @@ func main() {
 	// arrays.ZeroSumTriplets()
 	// arrays.ProductOptimized([]int{1,2,3,4})
 	// arrays.TestEqualSumSubArrays()
-	arrays.TestRotateKSteps();
+	// arrays.TestRotateKSteps();
+	arrays.TestBubbleSort()
 }
