@@ -12,5 +12,6 @@ func main() {
 	// arrays.ProductOptimized([]int{1,2,3,4})
 	// arrays.TestEqualSumSubArrays()
 	// arrays.TestRotateKSteps();
-	arrays.TestBubbleSort()
+	// arrays.TestBubbleSort()
+	arrays.TestInsertionSort()
 }
