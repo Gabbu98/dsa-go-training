@@ -10,5 +10,6 @@ func main() {
 	arrays.TestFindDuplicate()
 	// arrays.ZeroSumTriplets()
 	// arrays.ProductOptimized([]int{1,2,3,4})
-	arrays.TestEqualSumSubArrays()
+	// arrays.TestEqualSumSubArrays()
+	arrays.TestRotateKSteps();
 }
