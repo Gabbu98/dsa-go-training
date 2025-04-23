@@ -40,3 +40,26 @@
 - Board games to select next move
 - Graphs and trees through the use of a Depth First Search
 - Object detection in image processing
+
+[Link to the recipe for backtracking](https://www.youtube.com/watch?v=Nabbpl7y4Lo)
+#### 3 keys of backtracking
+- choices
+- constraints
+- goals
+
+### recipe
+```cpp
+void Backtrack(res, args) {
+    if (GOAL REACHED) {
+        // add solution to res
+        return;
+    }
+
+    for (int i = 0; i < NB_CHOICES; i++) {
+        if (CHOICES[i] is valid) {
+            // make choices[i]
+            Backtrack(res, args);
+            // undo choices[i]
+        }
+    }
+}
