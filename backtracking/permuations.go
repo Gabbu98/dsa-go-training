@@ -11,12 +11,12 @@ import (
 func permutations(input []int)[][]int{
 	var result [][]int = [][]int{}
 
-	backtrack(input, &result, []int{}, make([]bool, len(input)))
+	backtrack_permutations(input, &result, []int{}, make([]bool, len(input)))
 	
 	return result
 }
 
-func backtrack(input []int,result *[][]int, permutation []int, used []bool){
+func backtrack_permutations(input []int,result *[][]int, permutation []int, used []bool){
 	if len(permutation) == len(input) {
 		copyPerm := make([]int, len(permutation))
 		copy(copyPerm, permutation)
@@ -28,7 +28,7 @@ func backtrack(input []int,result *[][]int, permutation []int, used []bool){
 		if !used[i] {
 			used[i] = true
 			permutation = append(permutation, input[i])
-			backtrack(input, result, permutation, used)
+			backtrack_permutations(input, result, permutation, used)
 			used[i] = false
 			permutation = permutation[:len(permutation)-1]
 		}

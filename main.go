@@ -15,5 +15,6 @@ func main() {
 	// arrays.TestRotateKSteps();
 	// arrays.TestBubbleSort()
 	// arrays.TestInsertionSort()
-	backtracking.TestPermutations()
+	// backtracking.TestPermutations()
+	backtracking.TestGenerateParentheses()
 }
