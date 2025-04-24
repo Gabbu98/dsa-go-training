@@ -13,12 +13,32 @@ func balanced_parentheses(n int) [][]string {
 
 	var result [][]string = [][]string{}
 
-	backtrack(input, &result, []string{}, 0, n)
+	backtrack(input, &result, []string{}, 0, 0)
 
 	return result
 }
 
-func backtrack(input []string, result *[][], permutation []string, num_closing int, remaining_open int) {
+func backtrack(input []string, result *[][], permutation []string, num_closing int, num_open int) {
+
+	if len(permutation) == len(input) {
+		copyPerm := make([]string, len(permutation))
+		copy(copyPerm, permutation)
+		*result = append(*result, copyPerm)
+		return
+	}
+
+	for i:=1; i<=len(input); i++ {
+		isClosing := i % 2 == 0
+		
+		if isClosing && (num_closing < num_open) {
+
+		} else if !isClosing && (num_open <= len(input)/2) {
+
+		} else {
+			*result = [][]string{}
+			break
+		}
+	}
 
 	
 
