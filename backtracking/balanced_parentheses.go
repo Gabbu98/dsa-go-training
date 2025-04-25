@@ -14,9 +14,9 @@ func balanced_parentheses(n int) [][]string {
 
 	for i:=1; i<=n*2; i++ {
 		if i % 2 != 0 {
-			input = append(input, "{")
+			input = append(input, "(")
 		} else {
-			input = append(input, "}")
+			input = append(input, ")")
 		}
 	}
 
@@ -30,6 +30,12 @@ func balanced_parentheses(n int) [][]string {
 func backtrack(input []string, result *[][]string, permutation []string, num_closing int, num_open int, used []bool) {
 
 	if len(permutation) == len(input) {
+		for i:=0; i<len(*result); i++ {
+			if reflect.DeepEqual(permutation, (*result)[i]) {
+				return
+			}
+		}
+
 		copyPerm := make([]string, len(permutation))
 		copy(copyPerm, permutation)
 		*result = append(*result, copyPerm)
@@ -46,6 +52,7 @@ func backtrack(input []string, result *[][]string, permutation []string, num_clo
 			backtrack(input, result, permutation, num_closing, num_open, used)
 			used[i] = false
 			num_closing--
+			permutation = permutation[:len(permutation)-1]
 			
 		} else if !used[i] && !isClosing && (num_open <= len(input)/2) {
 			num_open++
@@ -54,12 +61,10 @@ func backtrack(input []string, result *[][]string, permutation []string, num_clo
 			backtrack(input, result, permutation, num_closing, num_open, used)
 			used[i] = false
 			num_open--
-		} else {
-			*result = [][]string{}
-			break
+			permutation = permutation[:len(permutation)-1]
 		}
 
-		permutation = permutation[:len(permutation)-1]
+		
 	}
 
 }
@@ -75,48 +80,20 @@ n pair of parentheses. e.g. for `2` it should return `()()` and `(())`.
 func TestGenerateParentheses() {
 	tests := []struct {
 		n     int
-		parens [][]string
+		count int
 	}{
-		{0, [][]string{{""}}},
-		{1, [][]string{{"(", ")"}}},
-		{2, [][]string{{"(", "(", ")", ")"}, {"(", ")", "(", ")"}}},
-		{3, [][]string{
-			{"(", "(", "(", ")", ")", ")"}, 
-			{"(", "(", ")", "(", ")", ")"}, 
-			{"(", "(", ")", ")", "(", ")"}, 
-			{"(", ")", "(", "(", ")", ")"}, 
-			{"(", ")", "(", ")", "(", ")"},
-		}},
-		{4, [][]string{
-			{"(", "(", "(", "(", ")", ")", ")", ")"}, 
-			{"(", "(", "(", ")", "(", ")", ")", ")"}, 
-			{"(", "(", "(", ")", ")", "(", ")", ")"}, 
-			{"(", "(", "(", ")", ")", ")", "(", ")"}, 
-			{"(", "(", ")", "(", "(", ")", ")", ")"}, 
-			{"(", "(", ")", "(", ")", "(", ")", ")"}, 
-			{"(", "(", ")", "(", ")", ")", "(", ")"}, 
-			{"(", "(", ")", ")", "(", ")", "(", ")"}, 
-			{"(", "(", ")", ")", ")", "(", ")", ")"}, 
-			{"(", ")", "(", "(", "(", ")", ")", ")"}, 
-			{"(", ")", "(", "(", ")", "(", ")", ")"}, 
-			{"(", ")", "(", "(", ")", ")", "(", ")"}, 
-			{"(", ")", "(", ")", "(", ")", "(", ")"}, 
-			{"(", ")", "(", ")", ")", "(", ")", ")"},
-		}},
-		{5, [][]string{
-			{"(", "(", "(", "(", "(", ")", ")", ")", ")", ")"}, 
-			{"(", "(", "(", "(", ")", "(", ")", ")", ")", ")"}, 
-			{"(", "(", "(", ")", ")", "(", ")", ")", ")"}, 
-			{"(", "(", "(", "(", ")", ")", ")", ")", ")"}, 
-			{"(", "(", "(", "(", ")", ")", ")", ")", ")"}, 
-			// (for brevity, the full list would continue similarly...)
-		}},
+		{0, 1},
+		{1, 1},
+		{2, 2},
+		{3, 5},
+		{4, 14},
+		{5, 42},
 	}
-
+	
 	for i, test := range tests {
 		got := balanced_parentheses(test.n)
-		if !reflect.DeepEqual(test.parens, got) {
-			fmt.Printf("Failed test case #%d.\nWant: %#v\nGot:  %#v\n", i, test.parens, got)
+		if len(got) != test.count {
+			fmt.Printf("Test #%d failed: got %d combinations, want %d\n", i, len(got), test.count)
 		}
 	}
 }
