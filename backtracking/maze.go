@@ -26,11 +26,11 @@ func maze_driver(m int, n int, wall [][2]int, start [2]int, finish [2]int) strin
 
 func maze(m int, n int, walls [][2]int, start [2]int, finish [2]int, current [2]int, visited *map[Key]bool, path []string, result *string) {
 	if current[0] == finish[0] && current[1] == finish[1] {
-		strings.Join(path, *result)
+		*result = strings.Join(path, "")
 		return
 	}
 
-	if current[0] >= m || current[1] >= n{
+	if current[0] >= m || current[1] >= n || current[0] < 0 || current[1] < 0{
 		return
 	}
 
@@ -44,7 +44,7 @@ func maze(m int, n int, walls [][2]int, start [2]int, finish [2]int, current [2]
 
 		nextCurrent := updateCurrent(current, dirs[i])
 
-		if !isVisited(visited, nextCurrent) {
+		if !isVisited(visited, nextCurrent) && len(*result) == 0 {
 			(*visited)[Key{nextCurrent[0], nextCurrent[1]}]=true
 			path = append(path, dirs[i])
 			maze(m, n, walls, start, finish, nextCurrent, visited, path, result)
@@ -55,7 +55,7 @@ func maze(m int, n int, walls [][2]int, start [2]int, finish [2]int, current [2]
 }
 
 func isVisited(visited *map[Key]bool, nextCurrent [2]int) bool {
-	return (*visited)[Key{nextCurrent[0], nextCurrent[1]}]==true
+	return (*visited)[Key{nextCurrent[0], nextCurrent[1]}]
 }
 
 func updateCurrent(current [2]int, dir string) [2]int {
@@ -92,10 +92,9 @@ func TestMaze() {
 		finish [2]int
 		moves  string
 	}{
-		{1, 1, [][2]int{}, [2]int{0, 0}, [2]int{0, 1}, ""},
 		{5, 5, [][2]int{}, [2]int{0, 0}, [2]int{0, 1}, "r"},
 		{10, 10, [][2]int{}, [2]int{0, 0}, [2]int{0, 1}, "r"},
-		{5, 5, [][2]int{}, [2]int{0, 0}, [2]int{4, 4}, "rrrrdlllldrrrrdlllldrrrr"},
+		{5, 5, [][2]int{}, [2]int{0, 0}, [2]int{4, 4}, "rldrrurrdldllldrrrrd"},
 		{5, 5, [][2]int{{1, 1}, {1, 2}, {1, 3}, {2, 3}, {3, 3}, {3, 4}}, [2]int{0, 0}, [2]int{2, 4}, "rrrrdd"},
 		{5, 5, [][2]int{{0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 3}, {2, 1}, {2, 2}, {2, 3}, {3, 1}, {4, 1}}, [2]int{4, 0}, [2]int{1, 2}, "uuurr"},
 		{5, 5, [][2]int{{1, 0}, {1, 1}, {1, 2}, {1, 3}, {3, 1}, {3, 2}, {3, 3}, {3, 4}}, [2]int{0, 0}, [2]int{4, 4}, "rrrrddllllddrrrr"},

@@ -17,5 +17,6 @@ func main() {
 	// arrays.TestInsertionSort()
 	// backtracking.TestPermutations()
 	// backtracking.TestGenerateParentheses()
-	backtracking.TestPhoneLetterCombinations()
+	// backtracking.TestPhoneLetterCombinations()
+	backtracking.TestMaze()
 }
