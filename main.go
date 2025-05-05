@@ -18,5 +18,6 @@ func main() {
 	// backtracking.TestPermutations()
 	// backtracking.TestGenerateParentheses()
 	// backtracking.TestPhoneLetterCombinations()
-	backtracking.TestMaze()
+	// backtracking.TestMaze()
+	backtracking.TestSudoku()
 }
