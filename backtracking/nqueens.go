@@ -8,63 +8,55 @@ import "math"
 // checker: cross and x check
 // used 2d array: n by n; when a check is performed it marks all the boxes made unavailable
 // iterate box by box
-func nqueens_drive(n int) {
-	useds := [][][]bool{}
-	board := make([][]string, n)
-	used := make([][]bool, n)
+func resetBoard(n int) [][]bool {
+	board := make([][]bool, n)
 	for i:=0; i<n; i++ {
-		board[i] = make([]string, n)
-		used[i] = make([]bool, n)
-		for j:=0; j<n; j++ {
-			used [i][j] = false
-			board [i][j] = "empty"
-		}
+		board[i] = make([]bool, n)
 	}
-
-	for i:=0; i<n; i++ {
-		for j:=0; j<n; j++ {
-			used[i][j] = true
-			board[i][j] = "queen"
-			if nqueens(n,0,&used,&board){
-				useds = append(useds, used)
-			}
-			used[i][j] = false
-			board[i][j] = "empty"
-		}
-	}
+	return board
 }
 
-func nqueens(n int, nQueensCounter int, used *[][]bool, result *[][]string) bool{
+func nqueens_drive(n int) bool {
+	useds := [][][]bool{}
+	board := resetBoard(n)
+	used := make([]bool, n)
+	for i:=0; i<n; i++ {
+		board[i] = make([]bool, n)
+	}
 
-	
-	for row:=0; row<n; row++ {
-		for col:=0; col<n; col++ {
-			
-			if !isUsed(row, col, used) && !(*used)[row][col] {
-				(*used)[row][col] = true
-				(*result)[row][col] = "queen"
-				nQueensCounter++
-
-				if nQueensCounter==n{
-					return true
-				}
-
-				if nqueens(n,nQueensCounter,  used, result) {
-					return true
-				} else {
-					nQueensCounter--
-					(*used)[row][col] = false
-					(*result)[row][col] = "empty"
-					return false
-				}
-				
-			}
-
+	for i:=0; i<n; i++ {
+		board[0][i]=true
+		if !nqueens(n, &board,used) {
+			return false
+		} else {
+			useds = append(useds, board)
 		}
+		board=resetBoard(n)
 	}
 
 	return true
+}
 
+func nqueens(n int, board *[][]bool, used []bool) bool {
+	for row:=0; row<n; row++ {
+		if !used[row] { 
+			used[row] = true
+
+			for col:=0; col<n; col++ {
+				if !(*board)[row][col] && !isUsed(row, col, board) {
+					(*board)[row][col] = true
+					if nqueens(n, board, used){
+						return true
+					}
+				}
+			}
+
+			used[row] = false
+			return false
+		}
+	}
+
+	return false
 }
 
 func isUsed(currentRow int, currentCol int, used *[][]bool) bool {
@@ -92,3 +84,4 @@ func isUsed(currentRow int, currentCol int, used *[][]bool) bool {
 	}
 	return false
 }
+
