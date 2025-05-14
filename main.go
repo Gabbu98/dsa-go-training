@@ -2,7 +2,8 @@ package main
 
 import (
 	// "github.com/gabbu98/dsa-go-training/arrays" // Replace with your actual module path
-	"github.com/gabbu98/dsa-go-training/backtracking"
+	// "github.com/gabbu98/dsa-go-training/backtracking"
+	"github.com/gabbu98/dsa-go-training/stack"
 )
 
 func main() {
@@ -19,5 +20,7 @@ func main() {
 	// backtracking.TestGenerateParentheses()
 	// backtracking.TestPhoneLetterCombinations()
 	// backtracking.TestMaze()
-	backtracking.TestSudoku()
+	// backtracking.TestSudoku()
+	stack.TestEmptyStackError()
+	stack.TestMaxStack()
 }
