@@ -21,6 +21,7 @@ func main() {
 	// backtracking.TestPhoneLetterCombinations()
 	// backtracking.TestMaze()
 	// backtracking.TestSudoku()
-	stack.TestEmptyStackError()
-	stack.TestMaxStack()
+	// stack.TestEmptyStackError()
+	// stack.TestMaxStack()
+	stack.TestIsExpressionBalanced()
 }
