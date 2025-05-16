@@ -54,24 +54,45 @@ func (stack *Stack) Pop() (rune, error) {
 	return value,nil
 }
 
-func closingAndMatch(r rune, top rune) bool {
-	if top != '{' && r == '}' {
-		return false
+// need to separate
+func closingAndMatch(r string, top string) bool {
+
+	// if both are open return false
+
+	if top == "{" && r == "}" {
+		return true
 	}
-	if top != '[' && r == ']' {
-		return false
+	if top == "[" && r == "]" {
+		return true
 	}
-	if top != '(' && r == ')' {
-		return false
+	if top == "(" && r == ")" {
+		return true
 	}
 
-	return true
+	return false
+}
+
+func closing(r string) bool {
+
+	if r == "}" {
+		return true
+	}
+	if r == "]" {
+		return true
+	}
+	if r == ")" {
+		return true
+	}
+
+	return false
 }
 
 func isExpressionBalancedRecursive(stack *Stack, r []rune) bool {
 
-	if len(r) == 0 {
+	if len(r) == 0 && len(stack.stack) == 0 {
 		return true
+	} else if len(r) == 0 && len(stack.stack) != 0 {
+		return false
 	}
 
 	top, err := stack.Pop()
@@ -79,9 +100,13 @@ func isExpressionBalancedRecursive(stack *Stack, r []rune) bool {
 	if err != nil {
 		stack.Push(r[0])
 	} else {
-		if !closingAndMatch(r[0], top) {
-			return false
-		} 
+		if closing(string(r[0])) && !closing(string(top)){
+			// if top is open and r is close but not of same type -> return false
+			// esle
+			if !closingAndMatch(string(r[0]), string(top)) {
+				return false
+			} 
+		}
 	}
 
 	r = r[1:]
@@ -104,9 +129,8 @@ func isExpressionBalanced(s string) bool {
 		return false
 	}
 
-	isExpressionBalancedRecursive(stack, r)
+	return isExpressionBalancedRecursive(stack, r)
 
-	return true
 }
 
 func TestIsExpressionBalanced() {
@@ -116,15 +140,15 @@ func TestIsExpressionBalanced() {
 	}{
 		{"", true},
 		{"()", true},
-		// {"(){", false},
-		// {"(){}", true},
-		// {"(){}]", false},
+		{"(){", false},
+		{"(){}", true},
+		{"(){}]", false},
 		// {"(){}][", false},
-		// {"(){}[]", true},
-		// {"({}[])", true},
-		// {"({[]})", true},
-		// {"({[])", false},
-		// {"(({[]))", false},
+		{"(){}[]", true},
+		{"({}[])", true},
+		{"({[]})", true},
+		{"({[])", false},
+		{"(({[]))", false},
 		// {")({[])", false},
 	}
 
