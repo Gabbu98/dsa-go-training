@@ -106,6 +106,9 @@ func isExpressionBalancedRecursive(stack *Stack, r []rune) bool {
 			if !closingAndMatch(string(r[0]), string(top)) {
 				return false
 			} 
+		} else {
+			stack.Push(top)
+			stack.Push(r[0])
 		}
 	}
 
@@ -143,13 +146,13 @@ func TestIsExpressionBalanced() {
 		{"(){", false},
 		{"(){}", true},
 		{"(){}]", false},
-		// {"(){}][", false},
+		{"(){}][", false},
 		{"(){}[]", true},
 		{"({}[])", true},
 		{"({[]})", true},
 		{"({[])", false},
 		{"(({[]))", false},
-		// {")({[])", false},
+		{")({[])", false},
 	}
 
 	for i, test := range tests {
