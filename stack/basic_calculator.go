@@ -1,15 +1,19 @@
 package stack
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
-// Scan the infix expression from left to right. 
-// If the scanned character is an operand, put it in the postfix expression. 
+// Scan the infix expression from left to right.
+// If the scanned character is an operand, put it in the postfix expression.
 // Otherwise, do the following
 // If the precedence of the current scanned operator is higher than the precedence of the operator on top of the stack, or if the stack is empty, or if the stack contains a ‘(‘, then push the current operator onto the stack.
 // Else, pop all operators from the stack that have precedence higher than or equal to that of the current operator. After that push the current operator onto the stack.
-// If the scanned character is a ‘(‘, push it to the stack. 
-// If the scanned character is a ‘)’, pop the stack and output it until a ‘(‘is encountered, and discard both the parenthesis. 
-// Repeat steps 2-5 until the infix expression is scanned. 
+// If the scanned character is a ‘(‘, push it to the stack.
+// If the scanned character is a ‘)’, pop the stack and output it until a ‘(‘is encountered, and discard both the parenthesis.
+// Repeat steps 2-5 until the infix expression is scanned.
 // Once the scanning is over, Pop the stack and add the operators in the postfix expression until it is not empty.
 // Finally, print the postfix expression.
 
@@ -17,12 +21,16 @@ import "fmt"
 
 // input: string with numbers, parentheses and basic arithmetic ops in the following order */+- return result
 
-operands := []string{"(",")","-","+","/","*"}
+var operands = []string{"(",")","-","+","/","*"}
 
-func isOperation(r rune) bool {
-	var s string = string(r)
+func isOperation(r string) bool {
 
-	return operands.contains(s)
+	for _, s := range operands {
+		if s == r {
+			return true
+		}
+	}
+	return false
 }
 
 func isCurrentHigher(top string, current string) bool {
@@ -32,10 +40,54 @@ func isCurrentHigher(top string, current string) bool {
 
 	i := 0
 
-	for currentIndex == -1 && topIndex == -1 || i < len(operands) {
+	for (currentIndex == -1 && topIndex == -1) || i < len(operands) {
 
+		if operands[i] == top {
+			topIndex = i
+		} else if operands[i] == current {
+			currentIndex = i
+		}
 		
 	}
+
+	if currentIndex > topIndex {
+		return true
+	}
+
+	return false
+}
+
+func BasicCalculatorRecursive(stackNumber *Stack, stackOps *Stack, input string) (float64, error) {
+
+	for len(input) > 0 {
+		var val string = string(input[0])
+
+		if(isOperation(val)) {
+			top, err := stackOps.PopString()
+			isCurrentHigherResult := true
+			if err == nil {
+				isCurrentHigherResult = isCurrentHigher(top, val)
+			} else {
+				return -1, err
+			}
+
+			if isCurrentHigherResult {
+				stackOps.PushString(val)
+			} else {
+				// calc
+			}
+		} else {
+			value, err := strconv.ParseFloat(val, 64)
+			
+			if err == nil {
+				stackNumber.PushFloat64(value)
+			} else {
+				return -1, err
+			}
+		}
+	}
+
+	return -1, nil
 }
 
 func BasicCalculator(input string) (float64, error) {
@@ -46,7 +98,7 @@ func BasicCalculator(input string) (float64, error) {
 	stackNumber := new(Stack)
 	stackOps := new(Stack)
 
-
+	result, errorMessage := BasicCalculatorRecursive(stackNumber, stackOps, input)
 }
 
 func TestBasicCalculator() {

@@ -4,15 +4,20 @@ import "errors"
 
 type Stack struct {
 	stack []rune
-	stackString string
+	stackFloat64 []float64
+	stackString []string
 }
 
 func (stack *Stack) Push(i rune) {
 	stack.stack = append(stack.stack, i)
 }
 
+func (stack *Stack) PushFloat64(i float64) {
+	stack.stackFloat64 = append(stack.stackFloat64, i)
+}
+
 func (stack *Stack) PushString(i string) {
-	stack.stackString = stack.stackString + i
+	stack.stackString = append(stack.stackString, i)
 }
 
 // Define the custom error
@@ -27,11 +32,20 @@ func (stack *Stack) Pop() (rune, error) {
 	return value,nil
 }
 
+func (stack *Stack) PopFloat64() (float64, error) {
+	if len(stack.stack) == 0 {
+		return -1,ErrorEmptyStack
+	}
+	var value float64 = stack.stackFloat64[len(stack.stackFloat64)-1]
+	stack.stackFloat64 = stack.stackFloat64[:len(stack.stackFloat64)-1]
+	return value,nil
+}
+
 func (stack *Stack) PopString() (string, error) {
-	if len(stack.stackString) == 0 {
+	if len(stack.stack) == 0 {
 		return "",ErrorEmptyStack
 	}
-	var value string = string(stack.stackString[len(stack.stackString)-1])
+	var value string = stack.stackString[len(stack.stackString)-1]
 	stack.stackString = stack.stackString[:len(stack.stackString)-1]
 	return value,nil
 }
