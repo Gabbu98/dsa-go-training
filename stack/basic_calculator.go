@@ -2,47 +2,51 @@ package stack
 
 import "fmt"
 
+// Scan the infix expression from left to right. 
+// If the scanned character is an operand, put it in the postfix expression. 
+// Otherwise, do the following
+// If the precedence of the current scanned operator is higher than the precedence of the operator on top of the stack, or if the stack is empty, or if the stack contains a ‘(‘, then push the current operator onto the stack.
+// Else, pop all operators from the stack that have precedence higher than or equal to that of the current operator. After that push the current operator onto the stack.
+// If the scanned character is a ‘(‘, push it to the stack. 
+// If the scanned character is a ‘)’, pop the stack and output it until a ‘(‘is encountered, and discard both the parenthesis. 
+// Repeat steps 2-5 until the infix expression is scanned. 
+// Once the scanning is over, Pop the stack and add the operators in the postfix expression until it is not empty.
+// Finally, print the postfix expression.
+
 // func BasicCalculator(input string) (float64, error)
 
 // input: string with numbers, parentheses and basic arithmetic ops in the following order */+- return result
 
+operands := []string{"(",")","-","+","/","*"}
 
-func BasicCalculatorRecursive(numberStack *Stack, operationStack *Stack) (float64, error) {
-	return -1,nil
-}
-
-func isOperation(r rune) (bool, error) {
+func isOperation(r rune) bool {
 	var s string = string(r)
 
-	if s == " " {
-		return false, nil
-	}
+	return operands.contains(s)
+}
 
-	if s == "{" || s == "}" || s == "*" || s == "/" || s == "+" || s == "-" {
-		return true, nil
-	}
+func isCurrentHigher(top string, current string) bool {
 
-	return false, nil
+	var currentIndex int = -1
+	var topIndex int = -1
+
+	i := 0
+
+	for currentIndex == -1 && topIndex == -1 || i < len(operands) {
+
+		
+	}
 }
 
 func BasicCalculator(input string) (float64, error) {
 	if input == "" {
-		return -1,nil
+		return -1, nil
 	}
 
 	stackNumber := new(Stack)
 	stackOps := new(Stack)
 
-	for _, element := range input {
-		isOps, _ := isOperation(element)
-		if !isOps {
-			stackNumber.Push(element)
-			continue
-		}
-		stackOps.Push(element)
-	}
 
-	return BasicCalculatorRecursive(stackNumber, stackOps)
 }
 
 func TestBasicCalculator() {
