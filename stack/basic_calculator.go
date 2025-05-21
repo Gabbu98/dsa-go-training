@@ -91,6 +91,18 @@ func isCurrentHigher(top string, current string) bool {
 	return false
 }
 
+func count(stackNumber *Stack, stackOperands *Stack, tok string) {
+
+	top, emptyStackErr := stackOperands.PopString()
+
+	for emptyStackErr == nil && !isCurrentHigher(top, tok) {
+		
+
+		top, emptyStackErr = stackOperands.PopString()
+	}
+
+}
+
 func BasicCalculatorRecursive(stackNumber *Stack, stackOps *Stack, input string, index int) (float64, int, error) {
 	for index < len(input) {
 		tok := string(input[0])
@@ -114,7 +126,7 @@ func BasicCalculatorRecursive(stackNumber *Stack, stackOps *Stack, input string,
 				stackNumber.PushFloat64(result)
 				index = newIndex
 			} else if tok == ")" {
-				result := count()
+				result := count(stackNumber, stackOps, tok)
 				return result, index, nil
 			} else {
 				top, _ := stackOps.PopString()
@@ -122,14 +134,14 @@ func BasicCalculatorRecursive(stackNumber *Stack, stackOps *Stack, input string,
 				if !isCurrentHigher(top, tok) {
 					stackOps.PushString(tok)
 				} else  {
-					count()
+					count(stackNumber, stackOps, tok)
 				}
 			}
 		}
 		index++
 	}
 
-	for len(stackOps) != 0 {
+	for len(stackOps.stackString) != 0 {
 		count()
 	}
 
