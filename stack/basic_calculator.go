@@ -91,12 +91,27 @@ func isCurrentHigher(top string, current string) bool {
 	return false
 }
 
-func count(stackNumber *Stack, stackOperands *Stack, tok string) {
-
+func count(stackNumber *Stack, stackOperands *Stack, tok string) (float64, error) {
+        var result float64 = 0
 	top, emptyStackErr := stackOperands.PopString()
-
+// might be popping for no reason, fix
 	for emptyStackErr == nil && !isCurrentHigher(top, tok) {
-		
+		right, rightErr := stackNumber.Pop()
+		left, leftErr := stackNumber.Pop()
+
+		if leftErr == nil {
+			return result, leftErr
+		} else if righErr == nil {
+			return result, rightErr
+		} else {
+			switch top {
+				case '*': result = left * right
+				case '/': result = left / right
+				case '+': result = left + right
+				case '-': result = left - right
+			}
+			stackNumber.Push(result)
+		}
 
 		top, emptyStackErr = stackOperands.PopString()
 	}
@@ -132,6 +147,7 @@ func BasicCalculatorRecursive(stackNumber *Stack, stackOps *Stack, input string,
 				top, _ := stackOps.PopString()
 
 				if !isCurrentHigher(top, tok) {
+					stackOps.PushString(top)
 					stackOps.PushString(tok)
 				} else  {
 					count(stackNumber, stackOps, tok)
