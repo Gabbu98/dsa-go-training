@@ -2,6 +2,7 @@ package stack
 
 import (
 	"fmt"
+	"go/token"
 	"strconv"
 	"strings"
 )
@@ -20,6 +21,39 @@ import (
 // func BasicCalculator(input string) (float64, error)
 
 // input: string with numbers, parentheses and basic arithmetic ops in the following order */+- return result
+
+// function evaluate(expression):
+//     stack = empty stack
+//     index = 0
+
+//     while index < length of expression:
+//         token = expression[index]
+
+//         if token is a digit:
+//             parse full number and push to stack
+
+//         else if token is an operator:
+//             while stack is not empty and precedence(token) <= precedence(top of stack):
+//                 pop operator and operands, compute, and push result
+//             push operator to stack
+
+//         else if token is '(':
+//             result, new_index = evaluate(sub-expression starting at index + 1)
+//             push result to stack
+//             index = new_index
+
+//         else if token is ')':
+//             while stack contains operators:
+//                 pop operator and operands, compute, and push result
+//             return top of stack and current index
+
+//         index += 1
+
+//     while stack contains operators:
+//         pop operator and operands, compute, and push result
+
+//     return top of stack
+
 
 var operands = []string{"(",")","-","+","/","*"}
 
@@ -57,37 +91,36 @@ func isCurrentHigher(top string, current string) bool {
 	return false
 }
 
-func BasicCalculatorRecursive(stackNumber *Stack, stackOps *Stack, input string) (float64, error) {
+func BasicCalculatorRecursive(stackNumber *Stack, stackOps *Stack, input string, index int) (float64, int, error) {
+	for index < len(input) {
+		tok := string(input[0])
 
-	for len(input) > 0 {
-		var val string = string(input[0])
+		if !isOperation(string(tok)) {
+			val , err := strconv.ParseFloat(tok, 64)
 
-		if(isOperation(val)) {
-			top, err := stackOps.PopString()
-			isCurrentHigherResult := true
-			if err == nil {
-				isCurrentHigherResult = isCurrentHigher(top, val)
-			} else {
-				return -1, err
+			if err != nil {
+				return -1, index, err
 			}
 
-			if isCurrentHigherResult {
-				stackOps.PushString(val)
-			} else {
-				// calc
-			}
+			stackNumber.PushFloat64(val)
 		} else {
-			value, err := strconv.ParseFloat(val, 64)
-			
-			if err == nil {
-				stackNumber.PushFloat64(value)
+			if tok == "(" {
+				result, newIndex, err := BasicCalculatorRecursive(new(Stack), new(Stack), input, index+1)
+				
+				if err != nil {
+					return -1, newIndex, err
+				}
+				
+				stackNumber.PushFloat64(result)
+				index = newIndex
+			} else if tok == ")" {
+				result := count()
+				return result, index, nil
 			} else {
-				return -1, err
+				
 			}
 		}
 	}
-
-	return -1, nil
 }
 
 func BasicCalculator(input string) (float64, error) {
@@ -98,7 +131,7 @@ func BasicCalculator(input string) (float64, error) {
 	stackNumber := new(Stack)
 	stackOps := new(Stack)
 
-	result, errorMessage := BasicCalculatorRecursive(stackNumber, stackOps, input)
+	result, index, errorMessage := BasicCalculatorRecursive(stackNumber, stackOps, input, 0)
 }
 
 func TestBasicCalculator() {
