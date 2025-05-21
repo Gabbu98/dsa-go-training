@@ -117,10 +117,29 @@ func BasicCalculatorRecursive(stackNumber *Stack, stackOps *Stack, input string,
 				result := count()
 				return result, index, nil
 			} else {
-				
+				top, _ := stackOps.PopString()
+
+				if !isCurrentHigher(top, tok) {
+					stackOps.PushString(tok)
+				} else  {
+					count()
+				}
 			}
 		}
+		index++
 	}
+
+	for len(stackOps) != 0 {
+		count()
+	}
+
+	result, err := stackNumber.PopFloat64()
+
+	if err != nil {
+		return result, index, err
+	}
+
+	return result, index, nil
 }
 
 func BasicCalculator(input string) (float64, error) {
