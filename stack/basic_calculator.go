@@ -2,9 +2,7 @@ package stack
 
 import (
 	"fmt"
-	"go/token"
 	"strconv"
-	"strings"
 )
 
 // Scan the infix expression from left to right.
@@ -94,27 +92,35 @@ func isCurrentHigher(top string, current string) bool {
 func count(stackNumber *Stack, stackOperands *Stack, tok string) (float64, error) {
         var result float64 = 0
 	top, emptyStackErr := stackOperands.PopString()
-// might be popping for no reason, fix
-	for emptyStackErr == nil && !isCurrentHigher(top, tok) {
-		right, rightErr := stackNumber.Pop()
-		left, leftErr := stackNumber.Pop()
 
-		if leftErr == nil {
+	for emptyStackErr == nil {
+
+		right, rightErr := stackNumber.PopFloat64()
+		left, leftErr := stackNumber.PopFloat64()
+
+		if leftErr != nil {
 			return result, leftErr
-		} else if righErr == nil {
+		} else if rightErr != nil {
 			return result, rightErr
 		} else {
 			switch top {
-				case '*': result = left * right
-				case '/': result = left / right
-				case '+': result = left + right
-				case '-': result = left - right
+				case "*": result = left * right
+				case "/": result = left / right
+				case "+": result = left + right
+				case "-": result = left - right
 			}
-			stackNumber.Push(result)
+			stackNumber.PushFloat64(result)
 		}
 
 		top, emptyStackErr = stackOperands.PopString()
+		
+		if tok 1= "" && emptyStackErr != nil  && isCurrentHigher(top, tok) {
+			stackOperands.PushString(top)
+			return result, nil
+		}
 	}
+
+	return result, emptyStackErr
 
 }
 
@@ -141,7 +147,8 @@ func BasicCalculatorRecursive(stackNumber *Stack, stackOps *Stack, input string,
 				stackNumber.PushFloat64(result)
 				index = newIndex
 			} else if tok == ")" {
-				result := count(stackNumber, stackOps, tok)
+				result, _ := count(stackNumber, stackOps, tok)
+
 				return result, index, nil
 			} else {
 				top, _ := stackOps.PopString()
@@ -150,7 +157,13 @@ func BasicCalculatorRecursive(stackNumber *Stack, stackOps *Stack, input string,
 					stackOps.PushString(top)
 					stackOps.PushString(tok)
 				} else  {
-					count(stackNumber, stackOps, tok)
+					result, err := count(stackNumber, stackOps, tok)
+
+					if err != nil {
+						return result, index, err
+					}
+
+					stackNumber.PushFloat64(result)
 				}
 			}
 		}
@@ -158,7 +171,13 @@ func BasicCalculatorRecursive(stackNumber *Stack, stackOps *Stack, input string,
 	}
 
 	for len(stackOps.stackString) != 0 {
-		count()
+		result, err := count(stackNumber, stackOps, "")
+
+		if err != nil {
+			return result, index, err
+		}
+
+		stackNumber.PushFloat64(result)
 	}
 
 	result, err := stackNumber.PopFloat64()
@@ -178,7 +197,9 @@ func BasicCalculator(input string) (float64, error) {
 	stackNumber := new(Stack)
 	stackOps := new(Stack)
 
-	result, index, errorMessage := BasicCalculatorRecursive(stackNumber, stackOps, input, 0)
+	result, _, errorMessage := BasicCalculatorRecursive(stackNumber, stackOps, input, 0)
+
+	return result, errorMessage
 }
 
 func TestBasicCalculator() {
