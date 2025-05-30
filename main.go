@@ -23,5 +23,6 @@ func main() {
 	// backtracking.TestSudoku()
 	// stack.TestEmptyStackError()
 	// stack.TestMaxStack()
-	stack.TestIsExpressionBalanced()
+	// stack.TestIsExpressionBalanced()
+	stack.TestBasicCalculator()
 }

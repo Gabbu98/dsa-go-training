@@ -33,7 +33,7 @@ func (stack *Stack) Pop() (rune, error) {
 }
 
 func (stack *Stack) PopFloat64() (float64, error) {
-	if len(stack.stack) == 0 {
+	if len(stack.stackFloat64) == 0 {
 		return -1,ErrorEmptyStack
 	}
 	var value float64 = stack.stackFloat64[len(stack.stackFloat64)-1]
@@ -42,7 +42,7 @@ func (stack *Stack) PopFloat64() (float64, error) {
 }
 
 func (stack *Stack) PopString() (string, error) {
-	if len(stack.stack) == 0 {
+	if len(stack.stackString) == 0 {
 		return "",ErrorEmptyStack
 	}
 	var value string = stack.stackString[len(stack.stackString)-1]
