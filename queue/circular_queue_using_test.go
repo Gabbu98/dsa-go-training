@@ -1,7 +1,5 @@
 package queue
 
-import "errors"
-
 // [-1,-1,-1,-1] front 4 rear 4
 // en 1 [-1,,-1,-1,1] front 4 rear 0
 // en 2 [2,-1,-1,1] front 4 rear 1
@@ -18,10 +16,28 @@ type (
 
 )
 
-func (queue *CircularQueue) enqueue(i int) error {
+func (queue *CircularQueue) enqueue(i int) {
+	var currentRear int = queue.rear
 
+	queue.rear++
+
+	if queue.rear == len(queue.queue) {
+		queue.rear = 0
+	}
+
+	queue.queue[currentRear] = i
 }
 
-func (queue *CircularQueue) dequeue() (int,error) {
+func (queue *CircularQueue) dequeue() int {
 
+	var currentFront int = queue.front
+
+	queue.front++
+
+	if queue.front == len(queue.queue) {
+		queue.front = 0
+	}
+
+	return queue.queue[currentFront]
+	
 }
