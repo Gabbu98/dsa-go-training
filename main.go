@@ -18,5 +18,9 @@ func main() {
 	// backtracking.TestGenerateParentheses()
 	// backtracking.TestPhoneLetterCombinations()
 	// backtracking.TestMaze()
-	// backtracking.TestSudoku()
+	// // backtracking.TestSudoku()
+	// stack.TestEmptyStackError()
+	// stack.TestMaxStack()
+	// stack.TestIsExpressionBalanced()
+	// stack.TestBasicCalculator()
 }
