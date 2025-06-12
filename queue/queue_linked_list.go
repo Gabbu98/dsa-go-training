@@ -1,16 +1,17 @@
 package queue
 
 import (
-
+	"container/list"
+	"errors"
 )
 
 var queueLinkedList = list.New()
 
-func enqueue(val int) {
+func enqueueLinkedList(val int) {
 	queueLinkedList.PushBack(val)
 }
 
-func dequeue() (int, error) {
+func dequeueLinkedList() (int,error) {
 	if queueLinkedList.Len() == 0 {
 		return -1, errors.New("queue is empty")
 	}

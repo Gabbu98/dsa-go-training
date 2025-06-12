@@ -9,7 +9,7 @@
 ## Complexity
 - enqueue and dequeue = O(1)
 - linked list faster 
-- slcies due to size variation are generally O(n) but in go it is faster
+- slices due to size variation are generally O(n) but in go it is faster
 
 ## Application
 - queues widely used in graph related problems
