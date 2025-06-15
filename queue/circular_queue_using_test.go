@@ -1,5 +1,7 @@
 package queue
 
+import "testing"
+
 // [-1,-1,-1,-1] front 4 rear 4
 // en 1 [-1,,-1,-1,1] front 4 rear 0
 // en 2 [2,-1,-1,1] front 4 rear 1
@@ -7,14 +9,23 @@ package queue
 // deq  [2,3,-1,-1] front 0 rear 2
 
 type (
-
 	CircularQueue struct {
-		queue	[4]int
+		queue	[]int
 		front	int
 		rear 	int
 	}
 
 )
+
+func NewCircularQueue(size int) (*CircularQueue) {
+	circQueue := &CircularQueue{
+		queue: make([]int, size),
+		front: size-1,
+		rear: size-1,
+	}
+
+	return circQueue
+}
 
 func (queue *CircularQueue) enqueue(i int) {
 	var currentRear int = queue.rear
@@ -40,4 +51,33 @@ func (queue *CircularQueue) dequeue() int {
 
 	return queue.queue[currentFront]
 	
+}
+
+func TestCircularQueue(t *testing.T) {
+	type testRound struct {
+		enqueueStart int
+		enqueueEnd int
+		dequeueStart int
+		dequeueEnd int
+		expectedErr error
+	}
+
+	tests := []struct{
+		size int
+		testRounds []testRound
+	}{
+		{1, []testRound{{1, 6, 6, 6, nil}}},
+		{2, []testRound{{1, 6, 5, 5, nil}}},
+		{4, []testRound{{1, 6, 3, 6, nil}}},
+		{4, []testRound{{1, 6, 3, 6, nil}, {1, 6, 3, 6, nil}}},
+	}
+
+	for i, test := range tests {
+		queue := NewCircularQueue(test.size)
+
+		for j, testRound := range test.testRounds {
+			
+		}
+
+	}
 }
