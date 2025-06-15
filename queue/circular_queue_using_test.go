@@ -76,7 +76,23 @@ func TestCircularQueue(t *testing.T) {
 		queue := NewCircularQueue(test.size)
 
 		for j, testRound := range test.testRounds {
-			
+			for i := testRound.enqueueStart; i <= testRound.enqueueEnd; i++ {
+				queue.enqueue(i)
+			}
+
+			for want := testRound.dequeueStart; want <= testRound.dequeueEnd; want++ {
+				got, err := queue.dequeue()
+				if err != nil {
+					if err != testRound.expectedErr {
+						t.Fatalf("Failed test case #%d round #%d. Unexpected error %s", i, j, err)
+					}
+					break
+				}
+
+				if got != want {
+					t.Fatalf("Failed test case #%d round #%d. Want %d, got %d", i, j, want, got)
+				}
+			}
 		}
 
 	}
