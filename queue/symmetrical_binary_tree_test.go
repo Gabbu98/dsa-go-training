@@ -1,5 +1,7 @@
 package queue
 
+import "testing"
+
 //  /*
 // TestIsTreeSymmetrical tests solution(s) with the following signature and problem description:
 
@@ -21,7 +23,6 @@ package queue
 // */
 
 // // if not odd numbear != symmetrical
-
 
 // 5642
 // 5642
@@ -46,3 +47,25 @@ package queue
 // 	output = append(output, inorder_traversal(root.right)...)
 // 	return output, nil
 // }
+
+
+func TestIsTreeSymmetrical(t *testing.T) {
+	tests := []struct {
+		tree		string
+		isSymmetric bool
+	}{
+		{"", false},
+		{"1", true},
+		{"1,2,2", true},
+		{"1,2,3", false},
+		{"1,2,2,3,nil,nil,3",3},
+	}
+
+	for i, test := range tests{
+		if got, err := isTreeSymmetrical(tree.New(test.tree)); err != nil {
+			t.Fatalf("failed test case #%d, unexpected error %s", i, err)
+		} else if got != test.isSymmetric {
+			t.Fatalf("Failed test case #%d got %t", i, test.isSymmetric, got)
+		}
+	}
+},
