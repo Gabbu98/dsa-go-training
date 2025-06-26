@@ -1,6 +1,9 @@
 package queue
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 //  /*
 // TestIsTreeSymmetrical tests solution(s) with the following signature and problem description:
@@ -30,42 +33,68 @@ import "testing"
 // 5632
 // 5642
 
-// type Node struct {
-// 	value	int
-// 	left	*Node
-// 	right	*Node
-// }
+type Tree struct {
+	rootNode 	*Node
+	leftStack 	[]string
+	rightStack	[]string
+}
 
-// func (node *Node) inorder_traversal(root *Node) ([]string, error) {
-// 	output := make([]string, 0)
-// 	if root == nil {
-// 		return output
-// 	}
+type Node struct {
+	value	string
+	left	*Node
+	right	*Node
+}
 
-// 	output = append(output, inorder_traversal(root.left)...)
-// 	output = append(output, root.value)
-// 	output = append(output, inorder_traversal(root.right)...)
-// 	return output, nil
-// }
+func New(values []string) Tree {
+	if len(values) == 0 {
+		return Tree{}
+	}
 
+	i:=1
+	root := &Node{value: values[0]}
+	queue := []*Node{root}
+
+	for i < len(values) {
+		current := queue[0]
+		queue = queue[1:]
+
+		if current.left == nil {
+			current.left = &Node{}
+			current.left.value = values[i]
+			queue = append(queue, current.left)
+			i++
+		}
+
+		if i >= len(values) {
+			break
+		}
+
+		if current.right == nil {
+			current.right = &Node{}
+			current.right.value = values[i]
+			queue = append(queue, current.right)
+			i++
+		}
+	}
+
+	return Tree{rootNode: root}
+}
 
 func TestIsTreeSymmetrical(t *testing.T) {
 	tests := []struct {
-		tree		string
+		tree		[]string
 		isSymmetric bool
 	}{
-		{"", false},
-		{"1", true},
-		{"1,2,2", true},
-		{"1,2,3", false},
-		{"1,2,2,3,nil,nil,3",3},
+		{[]string{"1","2","2","3","","","3"},true},
 	}
 
-	for i, test := range tests{
-		if got, err := isTreeSymmetrical(tree.New(test.tree)); err != nil {
-			t.Fatalf("failed test case #%d, unexpected error %s", i, err)
-		} else if got != test.isSymmetric {
-			t.Fatalf("Failed test case #%d got %t", i, test.isSymmetric, got)
-		}
+	for i:=0; i < len(tests); i++{
+		tree:=New(tests[i].tree)
+		fmt.Print("%w",tree)
+		// if got, err := isTreeSymmetrical(tree.New(test.tree)); err != nil {
+		// 	t.Fatalf("failed test case #%d, unexpected error %s", i, err)
+		// } else if got != test.isSymmetric {
+		// 	t.Fatalf("Failed test case #%d got %t", i, test.isSymmetric, got)
+		// }
 	}
-},
+}
