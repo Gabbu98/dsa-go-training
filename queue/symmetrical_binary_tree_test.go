@@ -1,7 +1,7 @@
 package queue
 
 import (
-	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -25,18 +25,11 @@ import (
 // Given "2,3,4,5,6,6,5", shown in the not symmetric tree above return false.
 // */
 
-// // if not odd numbear != symmetrical
-
-// 5642
-// 5642
-
-// 5632
-// 5642
-
 type Tree struct {
 	rootNode 	*Node
 	leftStack 	[]string
 	rightStack	[]string
+	isSymmetric bool
 }
 
 type Node struct {
@@ -47,7 +40,9 @@ type Node struct {
 
 func New(values []string) Tree {
 	if len(values) == 0 {
-		return Tree{}
+		t := Tree{}
+		t.isSymmetric = false
+		return t
 	}
 
 	i:=1
@@ -77,7 +72,49 @@ func New(values []string) Tree {
 		}
 	}
 
-	return Tree{rootNode: root}
+	t := Tree{rootNode: root}
+
+	if len(values) % 2 == 0 {
+		t.isSymmetric = false
+		return t
+	} 
+	
+	t.isSymmetric = t.isSymmetrical()
+	return t
+}
+
+func (t *Tree) isSymmetrical() bool {
+	leftList := []string{}
+	rec(*t.rootNode, &leftList, true)
+	rightList := []string{}
+	rec(*t.rootNode, &rightList, false)
+
+	return reflect.DeepEqual(leftList,rightList)
+}
+
+func rec(root Node, list *[]string, left bool) string {
+
+	if left ==true{
+		if root.left!=nil {
+			*list = append(*list, rec(*root.left,list,left))
+			
+		}
+
+		if root.right!=nil{
+			*list = append(*list, rec(*root.right,list,left))
+		}
+	} else {
+		if root.right!=nil {
+			*list = append(*list, rec(*root.right,list,left))
+			
+		}
+
+		if root.left!=nil{
+			*list = append(*list, rec(*root.left,list,left))
+		}
+	}
+
+	return root.value
 }
 
 func TestIsTreeSymmetrical(t *testing.T) {
@@ -85,16 +122,22 @@ func TestIsTreeSymmetrical(t *testing.T) {
 		tree		[]string
 		isSymmetric bool
 	}{
-		{[]string{"1","2","2","3","","","3"},true},
+		// {[]string{""}, true},
+		// {[]string{"1"}, true},
+		// {[]string{"1", "2", "2"}, true},
+		// {[]string{"1", "2", "3"}, false},
+		// {[]string{"1", "2", "2", "3", "", "", "3"}, true},
+		{[]string{"1", "2", "", "4"}, false},
+		{[]string{"1", "2", "3", "4", "", "5", "6"}, false},
+		{[]string{"1", "2", "", "4", "", "5", "6"}, false},
+		{[]string{"2", "4", "4", "5", "6", "5", "6"}, false},
+		{[]string{"2", "4", "4", "5", "6", "6", "5"}, true},
 	}
 
 	for i:=0; i < len(tests); i++{
 		tree:=New(tests[i].tree)
-		fmt.Print("%w",tree)
-		// if got, err := isTreeSymmetrical(tree.New(test.tree)); err != nil {
-		// 	t.Fatalf("failed test case #%d, unexpected error %s", i, err)
-		// } else if got != test.isSymmetric {
-		// 	t.Fatalf("Failed test case #%d got %t", i, test.isSymmetric, got)
-		// }
+		if tree.isSymmetric != tests[i].isSymmetric {
+			t.Fatalf("Expected %t but got %t for test case: %d", tests[i].isSymmetric, tree.isSymmetric, i)
+		}
 	}
 }
